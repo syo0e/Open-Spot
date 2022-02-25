@@ -1,7 +1,8 @@
 const { swaggerUi, swaggerSpec } = require("./swaggerDoc");
 const express = require("express");
 const cors = require("cors");
-const markerRouter = require("./routes/Markers");
+const markerRouter = require("./Routes/Markers");
+const userRouter = require("./Routes/Users");
 
 const app = express();
 const port = 80;
@@ -19,6 +20,7 @@ app.use(
 
 app.get("/", (_, res) => res.send("Hello world"));
 app.use("/markers", markersRouter);
+app.use("/users", usersRouter);
 
 app.listen(port, () => {
   console.log(`listening at http://localhost:${port}`);

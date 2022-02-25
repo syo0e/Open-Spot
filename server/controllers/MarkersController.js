@@ -7,6 +7,7 @@ module.exports = {
     }).catch((err) => {
       console.log(err);
     });
+
     res.status(200).json(result);
   },
 };

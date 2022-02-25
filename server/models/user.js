@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       phoneNum: DataTypes.INTEGER,
       role: DataTypes.STRING,
       oauthLogin: DataTypes.BOOLEAN,
+      saltedPassword: DataTypes.STRING,
+      salt: DataTypes.STRING,
     },
     {
       sequelize,
