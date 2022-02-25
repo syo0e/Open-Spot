@@ -1,0 +1,224 @@
+---
+openapi: 3.0.0
+info:
+  title: open-spot-API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: open-spot_API
+paths:
+  /markers:
+    get:
+      tags:
+        - markers
+      description: 모든 마커를 조회한다
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  markers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Marker"
+    post:
+      tags:
+        - markers
+      description: 마커를 추가한다.
+      responses:
+        "201":
+          description: created
+          content:
+            application/json:
+              schema:
+                properties:
+                  markers:
+                    type: object
+                    $ref: "#/components/schemas/Marker"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                storeName:
+                  description: 가게명
+                  type: string
+                address:
+                  description: 가게 주소
+                  type: string
+                callNum:
+                  description: 전화번호
+                  type: string
+                tagName:
+                  description: 태그명
+                  type: string
+                description:
+                  description: 가게 설명
+                  type: string
+                latitude:
+                  description: 위도
+                  type: number
+                longitude:
+                  description: 경도
+                  type: number
+  /markers/{markerId}:
+    get:
+      tags:
+        - markers
+      description: 해당 아이디를 가진 마커를 조회한다. 맵에서 마커를 누른 경우, ??마이페이지에서 저장한 가계를 선택했을 경우(이미 마커에 대한 정보가 있기 때문)??
+      parameters:
+        - name: markerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  marker:
+                    type: object
+                    $ref: "#/components/schemas/Marker"
+  /users:
+    patch:
+      tags:
+        - users
+      description: 사용자 정보 업데이트
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                properties:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: 이메일
+                  type: string
+                password:
+                  description: 비밀 번호
+                  type: string
+    delete:
+      tags:
+        - users
+      description: 사용자 정보 삭제
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                properties:
+  /users/markers:
+    get:
+      tags:
+        - users
+      description: 유저의 토큰을 이용해, 해당 유저 아이디가 저장한 마커들을 조회한다.
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  markers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Marker"
+  /auth/naver:
+    post:
+      tags:
+        - auth
+      description: 네이버 소셜 로그인. 만약 서버에서 JWT를 발급한다면, body or cookie에 전달할지 결정해야 한다.
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                properties:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                authorizationCode:
+                  description: URL로 받은 인증 코드
+                  type: string
+  /auth/local:
+    post:
+      tags:
+        - auth
+      description: 일반 로그인
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                properties:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: 이메일
+                  type: string
+                password:
+                  description: 비밀 번호
+                  type: string
+    get:
+      tags:
+        - auth
+      description: 토큰 정보를 이용한 로그아웃
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              schema:
+                properties:
+
+components:
+  schemas:
+    Marker:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ObjectId
+        storeName:
+          type: string
+          description: 가게명
+        address:
+          type: string
+          description: 가게 주소
+        callNum:
+          type: string
+          description: 전화번호
+        tagName:
+          type: string
+          description: 태그명
+        description:
+          type: string
+          description: 가게 소개
+        latitude:
+          type: number
+          description: 위도
+        longitude:
+          type: number
+          description: 경도
