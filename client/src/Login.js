@@ -93,6 +93,18 @@ const SocialIcons = styled.input`
   border: none;
   cursor: pointer;
   background-size: cover;
+
+  &::first-child {
+    background: url(./../public/img/GoogleIcon.png) no-repeat;
+  }
+
+  &::nth-child(2) {
+    background: url(./../public/img/NaverIcon.png) no-repeat;
+  }
+
+  &::last-child {
+    background: url(./../public/img/KakaoIcon.png) no-repeat;
+  }
 `;
 
 const Login = () => {
