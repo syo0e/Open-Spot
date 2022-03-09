@@ -92,7 +92,7 @@ paths:
     post:
       tags:
         - users
-      description: 회원가입 요청. 요청 본문의 사업자 등록번호 유무에 따라 일반사용자 / 사업자로 구분한다. 로그인 성공 시 일반사용자 / 사업자 여부를 반환한다.
+      description: 회원가입 요청. 요청 본문의 사업자 등록번호 유무에 따라 일반사용자 / 사업자로 구분한다. 회원가입 성공 시 일반사용자 / 사업자 여부를 반환한다.
       responses:
         "201":
           description: created
@@ -102,8 +102,29 @@ paths:
                 properties:
                   code:
                     type: integer
+                    example: 201
                   role:
                     type: string
+                    example: general
+        "409":
+          description: conflict
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 409
+                  error:
+                    type: string
+                    example: user info already exists
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ServerErr"
       requestBody:
         content:
           application/json:
@@ -113,21 +134,26 @@ paths:
                 email:
                   description: 이메일
                   type: string
+                  example: abc@naver.com
                   required: true
                 password:
                   description: 비밀 번호
                   type: string
+                  example: password
                   required: true
                 phoneNum:
                   description: 하이픈을 제외한 전화 번호
                   type: string
+                  example: 01012345678
                   required: true
                 userName:
                   description: 성명
                   type: string
+                  example: 김사과
                   required: true
                 companyNumbers:
                   description: 사업자 등록번호
+                  example: "0001122222"
                   type: integer
     patch:
       tags:
@@ -204,7 +230,7 @@ paths:
     post:
       tags:
         - auth
-      description: 일반 로그인
+      description: 일반 로그인. 로그인이 성공한 경우 쿠키에 토큰을 발급하고, 사용자의 role을 반환한다.
       responses:
         "200":
           description: ok
@@ -212,6 +238,43 @@ paths:
             application/json:
               schema:
                 properties:
+                  code:
+                    type: integer
+                    example: 200
+                  role:
+                    type: string
+                    example: general
+        "401":
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 401
+                  error:
+                    type: string
+                    example: unauthorized
+        "404":
+          description: not found. DB에 없는 이메일이 입력된 경우
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  error:
+                    type: string
+                    example: not found
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/ServerErr"
       requestBody:
         content:
           application/json:
@@ -221,10 +284,12 @@ paths:
                 email:
                   description: 이메일
                   type: string
+                  example: abc@naver.com
                   required: true
                 password:
                   description: 비밀 번호
                   type: string
+                  example: 귤
                   required: true
     get:
       tags:
@@ -267,3 +332,14 @@ components:
         longitude:
           type: number
           description: 경도
+    ServerErr:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status code
+          example: 500
+        error:
+          type: string
+          description: server error description
+          example: server error
